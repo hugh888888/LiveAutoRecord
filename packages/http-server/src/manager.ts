@@ -7,6 +7,8 @@ import { provider as providerForHuYa } from '@autorecord/huya-recorder'
 import { provider as providerForDouYin } from '@autorecord/douyin-recorder'
 import { paths } from './env'
 import { pick, readJSONFileSync, replaceExtName, writeJSONFileSync } from './utils'
+const sharp = require('sharp')
+const textToSvg = require('text-to-svg')
 import {
   genRecorderIdInDB,
   getRecorders,
@@ -130,7 +132,11 @@ export async function initRecorderManager(serverOpts: ServerOpts): Promise<void>
         stopTimestamp: Date.now(),
         stopReason: reason,
       })
-
+      await genCoverFile(
+        path.join(__dirname, '/public/cover.jpg'),
+        { fontSize: 160, text: recordHandle.savePath, fill: '#FFF', stroke: '#87CEFA' },
+        replaceExtName(recordHandle.savePath, '.jpg'),
+      )
       if (autoGenerateSRTOnRecordStop) {
         const extraDataPath = replaceExtName(recordHandle.savePath, '.json')
         if (!fs.existsSync(extraDataPath)) return
@@ -190,6 +196,52 @@ export async function genSRTFile(extraDataPath: string, srtPath: string): Promis
   await fs.promises.writeFile(srtPath, stringifySync(parsedSRT, { format: 'SRT' }))
 }
 
+export async function genCoverFile(basePicture, font, newFilePath) {
+  const { fontSize, text, fill, stroke } = font
+
+  const textToSvgSync = textToSvg.loadSync(path.join(__dirname, '/public/FZSTK.TTF'))
+  const attributes = {
+    fill: fill,
+    stroke: stroke, // 边框颜色
+    'stroke-width': 3,
+    'font-weight': 'bold',
+  }
+  const options = {
+    x: 0,
+    y: 0,
+    fontSize,
+    anchor: 'top',
+    attributes,
+  }
+
+  let textArr = text.split('.')[0].split('_')
+  textArr.shift()
+  if (textArr.length > 1) {
+    const lastElement = textArr[textArr.length - 1]
+    // 如果 lastElement 长度大于 10，就拆分
+    if (lastElement.length > 14) {
+      textArr.pop()
+      textArr.push(lastElement.slice(0, 14))
+      textArr.push(lastElement.slice(14))
+    }
+  }
+  let svgBuffers = textArr.map((item) => Buffer.from(textToSvgSync.getSVG(item, options)))
+
+  let basePictureInfo = await sharp(basePicture).metadata()
+
+  let compositePromises = svgBuffers.map(async (svgBuffer, index) => {
+    let { width } = await sharp(svgBuffer).metadata()
+
+    return {
+      input: svgBuffer,
+      top: Math.floor((basePictureInfo.height + 2 * index * fontSize) / 2 - 100),
+      left: Math.floor((basePictureInfo.width - width) / 2),
+    }
+  })
+
+  let compositeArray = await Promise.all(compositePromises)
+  await sharp(basePicture).composite(compositeArray).toFile(newFilePath)
+}
 interface ManagerConfig {
   savePathRule: string
   autoRemoveSystemReservedChars: boolean

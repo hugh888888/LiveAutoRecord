@@ -5,7 +5,7 @@ import { API } from './api_types'
 import { asyncRouteHandler, createPagedResultGetter, getNumberFromQuery } from './utils'
 import * as db from '../db'
 import { assertStringType, replaceExtName } from '../utils'
-import { genSRTFile } from '../manager'
+import { genSRTFile, genCoverFile } from '../manager'
 
 const router = Router()
 
@@ -136,4 +136,29 @@ router.route('/records/:id/srt').post(
   }),
 )
 
+router.route('/records/:id/cover').post(
+  asyncRouteHandler(async (req, res) => {
+    const { id } = req.params
+    const record = db.getRecord(id)
+    if (record == null) {
+      res.json({ payload: null }).status(404)
+      return
+    }
+    const projectDirectory = path.resolve(__dirname, '..')
+
+    const srtPath = replaceExtName(record.savePath, '.jpg')
+    console.log(path.join(projectDirectory, '/public/cover.jpg'))
+
+    await genCoverFile(
+      path.join(projectDirectory, '/public/cover.jpg'),
+      { fontSize: 160, text: record.savePath, fill: '#FFF', stroke: '#87CEFA' },
+      replaceExtName(record.savePath, '.jpg'),
+    )
+
+    res.json({
+      // 考虑到服务端安全，这里就先只返回 filename
+      payload: path.basename(srtPath),
+    })
+  }),
+)
 export { router }

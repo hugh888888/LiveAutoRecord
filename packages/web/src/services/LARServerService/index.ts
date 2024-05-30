@@ -98,7 +98,10 @@ async function createRecordSRT(args: API.createRecordSRT.Args): Promise<API.crea
   const resp = await requester.post<{ payload: API.createRecordSRT.Resp }>(`/records/${args.id}/srt`)
   return resp.data.payload
 }
-
+async function createRecordCover(args: API.createRecordCover.Args): Promise<API.createRecordCover.Resp> {
+  const resp = await requester.post<{ payload: API.createRecordCover.Resp }>(`/records/${args.id}/cover`)
+  return resp.data.payload
+}
 async function getRecordVideoURL(args: { id: string }): Promise<string> {
   return `${baseURL}/records/${args.id}/video`
 }
@@ -148,6 +151,7 @@ export const LARServerService = {
   getRecordVideoURL,
   getSettings,
   setSettings,
+  createRecordCover,
 
   getServerMessages,
 

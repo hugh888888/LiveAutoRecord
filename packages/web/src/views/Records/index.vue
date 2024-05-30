@@ -131,6 +131,11 @@
               {{ $t('records.generate_srt') }}
             </v-btn>
           </span>
+          <span :title="!record.isFileExists ? $t('records.file_not_exists') : ''">
+            <v-btn @click="genCover(record)" size="small" variant="text" :disabled="!record.isFileExists">
+              {{ '生成封面' }}
+            </v-btn>
+          </span>
         </div>
       </template>
     </v-data-table>
@@ -190,7 +195,10 @@ const genSRT = async (record: Record) => {
     record.generatingSRT = false
   }
 }
-
+const genCover = async (record: Record) => {
+  const file = await LARServerService.createRecordCover({ id: record.id })
+  // TODO: 通知
+}
 const clearInvalid = async () => {
   requestingClearInvalid.value = true
   try {

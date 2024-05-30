@@ -156,7 +156,13 @@ export namespace API {
 
     export type Resp = string
   }
+  export namespace createRecordCover {
+    export interface Args {
+      id: RecordModel['id']
+    }
 
+    export type Resp = string
+  }
   export namespace getSettings {
     export interface Args {}
 

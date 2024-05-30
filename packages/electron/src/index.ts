@@ -88,7 +88,6 @@ function createWindow() {
     const rendererURL = process.env['ELECTRON_RENDERER_URL']
     window.loadURL(rendererURL)
     baseURL = new URL(rendererURL)
-    window.webContents.openDevTools()
   } else {
     const rendererPath = join(__dirname, '../renderer/index.html')
     window.loadFile(rendererPath)
@@ -98,7 +97,7 @@ function createWindow() {
     // https://url.spec.whatwg.org/#dom-url-pathname
     baseURL.pathname = dirname(rendererPath)
   }
-
+  window.webContents.openDevTools()
   window.webContents.setWindowOpenHandler((details) => {
     const isAppPage = details.url.startsWith(baseURL.toString())
 
