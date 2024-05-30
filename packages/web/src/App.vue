@@ -11,7 +11,7 @@ import { ClientService } from './services/ClientService'
 onMounted(() => {
   const clientAPI = ClientService.getClientAPI()
   if (clientAPI) {
-    document.title = `LAR 直播自动录制 v${clientAPI.getVersion()}`
+    document.title = `小H 直播自动录制 v${clientAPI.getVersion()}`
   }
 })
 </script>

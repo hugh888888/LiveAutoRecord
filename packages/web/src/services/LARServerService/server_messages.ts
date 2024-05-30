@@ -2,8 +2,10 @@ import { Observable, Subject } from 'rxjs'
 import type { SSEMessage } from '@autorecord/http-server'
 
 // TODO: 暂时用固定值
-const baseURL = 'http://localhost:8085/api'
-
+let baseURL = 'http://localhost:8085/api'
+if (window.location.hostname.includes('li-h.me')) {
+  baseURL = 'https://sapi.li-h.me/api'
+}
 const eventSubject = new Subject<SSEMessage>()
 
 const es = new EventSource(`${baseURL}/events`)

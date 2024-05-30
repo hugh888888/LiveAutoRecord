@@ -4,7 +4,10 @@ import { createTypedObjectFromEntries, omit } from '../../utils'
 import { getServerMessages } from './server_messages'
 
 // TODO: 暂时用固定值
-const baseURL = 'http://localhost:8085/api'
+let baseURL = 'http://localhost:8085/api'
+if (window.location.hostname.includes('li-h.me')) {
+  baseURL = 'https://sapi.li-h.me/api'
+}
 
 const requester = axios.create({
   baseURL,

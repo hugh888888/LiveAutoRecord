@@ -36,9 +36,27 @@ export async function startServer(opts: PickPartial<ServerOpts, 'getSettings' | 
   const app = express()
   app.use(express.json({ limit: '32mb' }))
   app.use(express.urlencoded({ extended: true }))
+  const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:4173',
+    'http://127.0.0.1:5173',
+    'http://127.0.0.1:4173',
+    'https://re.li-h.me',
+    'https://re.t.li-h.me',
+    'https://sapi.li-h.me',
+  ]
+
   app.use(
     cors({
-      origin: 'http://localhost:4173',
+      origin: function (origin, callback) {
+        // 允许没有 origin 的请求（例如：mobile apps 或 curl requests）
+        if (!origin) return callback(null, true)
+        if (allowedOrigins.indexOf(origin) === -1) {
+          var msg = 'CORS policy for this site does not ' + 'allow access from the specified Origin.'
+          return callback(new Error(msg), false)
+        }
+        return callback(null, true)
+      },
     }),
   )
 

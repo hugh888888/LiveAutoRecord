@@ -192,45 +192,6 @@
       </v-form>
     </v-card-item>
 
-    <v-card-title>{{ t('settings.about') }}</v-card-title>
-
-    <v-card-item>
-      <v-table>
-        <tbody>
-          <tr>
-            <td>{{ t('settings.version') }}</td>
-            <td>v{{ version }}</td>
-          </tr>
-          <tr>
-            <td>{{ t('settings.open_source') }}</td>
-            <td>
-              <a href="https://github.com/WhiteMinds/LiveAutoRecord" target="_blank">
-                https://github.com/WhiteMinds/LiveAutoRecord
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td>{{ t('settings.feedback') }}</td>
-            <td>
-              <a href="https://github.com/WhiteMinds/LiveAutoRecord/issues" target="_blank">
-                https://github.com/WhiteMinds/LiveAutoRecord/issues
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td>{{ t('settings.author') }}</td>
-            <td>
-              <a href="https://space.bilibili.com/23505769" target="_blank">WhiteMind</a>
-            </td>
-          </tr>
-          <tr>
-            <td>{{ t('settings.email') }}</td>
-            <td>whitemind@qq.com</td>
-          </tr>
-        </tbody>
-      </v-table>
-    </v-card-item>
-
     <v-card-actions class="border-t justify-end">
       <v-btn @click="apply">{{ t('common.apply') }}</v-btn>
       <v-btn @click="$router.back">{{ t('common.cancel') }}</v-btn>
