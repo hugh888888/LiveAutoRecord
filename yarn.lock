@@ -94,25 +94,32 @@ __metadata:
     "@autorecord/douyin-recorder": ^1.1.0
     "@autorecord/douyu-recorder": ^1.2.2
     "@autorecord/huya-recorder": ^1.1.0
-    "@autorecord/manager": "workspace:^"
+    "@autorecord/manager": ^1.0.3
     "@autorecord/shared": "workspace:^"
     "@types/cors": ^2.8.12
     "@types/express": ^4.17.13
     "@types/lodash": ^4.14.185
     "@types/morgan": ^1.9.3
+    "@types/node": "*"
     "@types/ramda": ^0.28.15
+    "@types/tough-cookie": ^4.0.2
+    axios: ^0.27.2
+    axios-cookiejar-support: ^4.0.3
     cors: ^2.8.5
     cpx: ^1.5.0
     cross-env: ^7.0.3
     env-paths: ^2.0.0
     express: ^4.18.1
     lodash: ^4.17.21
+    mitt: ^3.0.0
     morgan: ^1.10.0
     nodemon: ^2.0.20
+    prettier: ^3.2.5
     ramda: ^0.28.0
     sharp: ^0.28.0
     subtitle: ^4.2.1
     text-to-svg: ^3.1.0
+    tough-cookie: ^4.1.2
     ts-node: ^10.9.1
     typescript: ^4.8.3
     winston: ^3.8.2
@@ -134,7 +141,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@autorecord/manager@workspace:^, @autorecord/manager@workspace:packages/manager":
+"@autorecord/manager@^1.0.3, @autorecord/manager@workspace:packages/manager":
   version: 0.0.0-use.local
   resolution: "@autorecord/manager@workspace:packages/manager"
   dependencies:
@@ -2260,6 +2267,13 @@ __metadata:
   version: 1.0.6
   resolution: "@types/string-template@npm:1.0.6"
   checksum: de68f02804014c390e6c911add2c8865fef61780062b8187e7803cbb5b43603dd0291ffffd1bd135df552878939cc2e0709380cc55203c87bb25281c4d325456
+  languageName: node
+  linkType: hard
+
+"@types/tough-cookie@npm:^4.0.2":
+  version: 4.0.5
+  resolution: "@types/tough-cookie@npm:4.0.5"
+  checksum: f19409d0190b179331586365912920d192733112a195e870c7f18d20ac8adb7ad0b0ff69dad430dba8bc2be09593453a719cfea92dc3bda19748fd158fe1498d
   languageName: node
   linkType: hard
 
@@ -9960,6 +9974,15 @@ __metadata:
   bin:
     prettier: bin/prettier.cjs
   checksum: 6a832876a1552dc58330d2467874e5a0b46b9ccbfc5d3531eb69d15684743e7f83dc9fbd202db6270446deba9c82b79d24383d09924c462b457136a759425e33
+  languageName: node
+  linkType: hard
+
+"prettier@npm:^3.2.5":
+  version: 3.4.2
+  resolution: "prettier@npm:3.4.2"
+  bin:
+    prettier: bin/prettier.cjs
+  checksum: 061c84513db62d3944c8dc8df36584dad82883ce4e49efcdbedd8703dce5b173c33fd9d2a4e1725d642a3b713c932b55418342eaa347479bc4a9cca114a04cd0
   languageName: node
   linkType: hard
 

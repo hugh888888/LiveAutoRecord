@@ -4,7 +4,7 @@ import { createRecorderManager, Recorder, RecorderCreateOpts, RecordExtraData } 
 import { provider as providerForDouYu } from '@autorecord/douyu-recorder'
 import { provider as providerForBilibili } from '@autorecord/bilibili-recorder'
 import { provider as providerForHuYa } from '@autorecord/huya-recorder'
-import { provider as providerForDouYin } from '@autorecord/douyin-recorder'
+import { provider as providerForDouYin } from './douyin/index'
 import { paths } from './env'
 import { pick, readJSONFileSync, replaceExtName, writeJSONFileSync } from './utils'
 const sharp = require('sharp')
