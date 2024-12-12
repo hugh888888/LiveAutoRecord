@@ -133,7 +133,7 @@
           </span>
           <span :title="!record.isFileExists ? $t('records.file_not_exists') : ''">
             <v-btn @click="genCover(record)" size="small" variant="text" :disabled="!record.isFileExists">
-              {{ '生成封面' }}
+              {{ '生成New' }}
             </v-btn>
           </span>
         </div>

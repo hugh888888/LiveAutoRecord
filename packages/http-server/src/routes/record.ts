@@ -5,7 +5,7 @@ import { API } from './api_types'
 import { asyncRouteHandler, createPagedResultGetter, getNumberFromQuery } from './utils'
 import * as db from '../db'
 import { assertStringType, replaceExtName } from '../utils'
-import { genSRTFile, genCoverFile } from '../manager'
+import { genSRTFile, genCoverFile, genNewMp4 } from '../manager'
 
 const router = Router()
 
@@ -158,6 +158,23 @@ router.route('/records/:id/cover').post(
     res.json({
       // 考虑到服务端安全，这里就先只返回 filename
       payload: path.basename(srtPath),
+    })
+  }),
+)
+router.route('/records/:id/new').post(
+  asyncRouteHandler(async (req, res) => {
+    const { id } = req.params
+    const record = db.getRecord(id)
+    if (record == null) {
+      res.json({ payload: null }).status(404)
+      return
+    }
+
+    await genNewMp4(record.savePath)
+
+    res.json({
+      // 考虑到服务端安全，这里就先只返回 filename
+      payload: path.basename(record.savePath),
     })
   }),
 )

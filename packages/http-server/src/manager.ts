@@ -132,11 +132,12 @@ export async function initRecorderManager(serverOpts: ServerOpts): Promise<void>
         stopTimestamp: Date.now(),
         stopReason: reason,
       })
-      await genCoverFile(
-        path.join(__dirname, '/public/cover.jpg'),
-        { fontSize: 160, text: recordHandle.savePath, fill: '#FFF', stroke: '#87CEFA' },
-        replaceExtName(recordHandle.savePath, '.jpg'),
-      )
+      genNewMp4(recordHandle.savePath)
+      // await genCoverFile(
+      //   path.join(__dirname, '/public/cover.jpg'),
+      //   { fontSize: 160, text: recordHandle.savePath, fill: '#FFF', stroke: '#87CEFA' },
+      //   replaceExtName(recordHandle.savePath, '.jpg'),
+      // )
       if (autoGenerateSRTOnRecordStop) {
         const extraDataPath = replaceExtName(recordHandle.savePath, '.json')
         if (!fs.existsSync(extraDataPath)) return
@@ -195,7 +196,50 @@ export async function genSRTFile(extraDataPath: string, srtPath: string): Promis
 
   await fs.promises.writeFile(srtPath, stringifySync(parsedSRT, { format: 'SRT' }))
 }
+const { exec } = require('child_process')
+function convertToAudio(address: string, savePath: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    let [one, two, three] = path.basename(address).replace('董路_', '').replace('.mp4', '').split('_')
+    two.replaceAll('-', ':')
+    const command = `ffmpeg -i ${address} -f lavfi -i color=s=400x300 -vf "drawtext=text='${one}':fontcolor=white:fontsize=26:x=(w-text_w)/2:y=(h-text_h)/2:borderw=1:bordercolor=#87CEFA,drawtext=text='${two}':fontcolor=white:fontsize=26:x=(w-text_w)/2:y=(h-text_h)/2+30:borderw=1:bordercolor=#87CEFA,drawtext=text='${three}':fontcolor=white:fontsize=26:x=(w-text_w)/2:y=(h-text_h)/2+60:borderw=1:bordercolor=#87CEFA"  -map 0:a -map 1:v -c:v libx264 -c:a aac -shortest -threads 4 ${savePath}`
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`执行出错: ${error}`)
+        reject(error)
+        return
+      }
+      console.log(`stdout: ${stdout}`)
+      console.error(`stderr: ${stderr}`)
+    })
+  })
+}
+function convertToAudio2(address: string, savePath: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    // ffmpeg -err_detect ignore_err -i input.fmp4 -c copy output.mp4
 
+    const command = `ffmpeg -err_detect ignore_err  -i ${address}   -c copy  -threads 4  ${savePath}`
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`执行出错: ${error}`)
+        reject(error)
+        return
+      }
+      console.log(`stdout: ${stdout}`)
+      console.error(`stderr: ${stderr}`)
+    })
+  })
+}
+export async function genNewMp4(address) {
+  const dirPath = path.dirname(address).replace('抖音', 'dymp3')
+
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true })
+  }
+
+  const savePath = path.join(dirPath, path.basename(address))
+  console.log(savePath)
+  await convertToAudio2(address, savePath)
+}
 export async function genCoverFile(basePicture, font, newFilePath) {
   const { fontSize, text, fill, stroke } = font
 
